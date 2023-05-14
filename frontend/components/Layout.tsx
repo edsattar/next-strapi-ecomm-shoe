@@ -9,11 +9,11 @@ import { Urbanist } from "next/font/google";
 const urbanist = Urbanist({ subsets: ["latin"] });
 
 interface Props {
-  navbarMenuItems?: MenuItemType[];
+  navbarMenuItems: MenuItemType[];
   children: React.ReactNode;
 }
 
-const Layout = ({ navbarMenuItems={}, children }: Props) => {
+const Layout = ({ navbarMenuItems, children }: Props) => {
   return (
     <main className={urbanist.className}>
       <Wrapper>

@@ -15,7 +15,7 @@ export default factories.createCoreController(
       try {
         const lineItems = await Promise.all(
           cartItems.map(async (cartItem) => {
-            console.log("this is product------->", cartItem);
+            // console.log("this is product------->", cartItem);
 
             return {
               price_data: {

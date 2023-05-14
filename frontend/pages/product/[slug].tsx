@@ -198,7 +198,7 @@ export async function getStaticPaths() {
   const { data } = await fetchAllProductSlugs();
 
   // get paths from categories slug
-  const paths = data.map((item) => ({
+  const paths = data?.map((item) => ({
     params: { slug: item.attributes.slug },
   }));
 

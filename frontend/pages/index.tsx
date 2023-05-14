@@ -46,7 +46,10 @@ export default function Home({ all_products, categories }: Props) {
   );
 }
 export async function getStaticProps() {
-  const all_products = await fetch_all_products(1, 4);
+  const all_products = await fetch_all_products({
+    page: 1,
+    pageSize: 100,
+  });
   const categories = await fetchAllCategories();
   return { props: { all_products, categories } };
 }

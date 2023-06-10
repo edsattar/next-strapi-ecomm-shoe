@@ -9,20 +9,32 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { fetchAllCategories } from "@/utils/strapi";
-import { CategoriesType } from "@/types";
-
+import { MenuItemType } from "@/types";
 import { checkout_request } from "@/utils";
 
 import { loadStripe, Stripe } from "@stripe/stripe-js";
+
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-interface Props {
-  categories: CategoriesType;
+export async function getStaticProps() {
+  const categories = await fetchAllCategories();
+  const navbarMenuItems = [
+    { id: 1, name: "Home", url: "/" },
+    { id: 2, name: "About", url: "/about" },
+    { id: 3, name: "Categories", subMenu: categories.data },
+    { id: 4, name: "Contact", url: "/contact" },
+    { id: 5, name: "Blog", url: "/blog" },
+  ];
+  return { props: { navbarMenuItems } };
 }
 
-const Cart = ({ categories }: Props) => {
+interface Props {
+  navbarMenuItems: MenuItemType[];
+}
+
+const Cart = ({ navbarMenuItems }: Props) => {
   const [loading, setLoading] = useState(false);
   const { cartItems } = useSelector((state: RootState) => state.cart);
 
@@ -54,29 +66,18 @@ const Cart = ({ categories }: Props) => {
       console.log(error);
     }
   };
-
-  const menuItems = [
-    { id: 1, name: "Home", url: "/" },
-    { id: 2, name: "About", url: "/about" },
-    { id: 3, name: "Categories", subMenu: categories.data },
-    { id: 4, name: "Contact", url: "/contact" },
-    { id: 5, name: "Blog", url: "/blog" },
-  ];
-
   return (
-    <Layout navbarMenuItems={menuItems}>
-      <div className="w-full md:py-20">
+    <Layout navbarMenuItems={navbarMenuItems}>
+      <div className="w-full md:p-10 m-auto">
+      {/* Header ---------- */}
+      <div className="mx-auto mt-8  text-center md:mt-0">
+        <div className="mb-5 text-[28px] font-semibold leading-tight md:text-[34px]">
+          Shopping Cart
+        </div>
+      </div>
         {cartItems.length > 0 && (
           <>
-            {/* Header ---------- */}
-            <div className="mx-auto mt-8 max-w-[800px] text-center md:mt-0">
-              <div className="mb-5 text-[28px] font-semibold leading-tight md:text-[34px]">
-                Shopping Cart
-              </div>
-            </div>
-            {/* ---------- Header */}
-
-            <div className="flex min-w-[432px] flex-col gap-12 py-10 lg:flex-row">
+            <div className="flex min-w-[360px] flex-col gap-12 py-10 lg:flex-row">
               {/* Cart Items ---------- */}
               <div className="flex-[2]">
                 <div className="mb-4 text-lg font-bold">Cart Items</div>
@@ -84,19 +85,11 @@ const Cart = ({ categories }: Props) => {
                   <CartItem key={index} cartItem={item} cartItemId={index} />
                 ))}
               </div>
-              {/* ---------- Cart Items */}
 
-              {/* Summary Section ---------- */}
+              {/* Summary ---------- */}
               <div className="flex-[1]">
                 <OrderSummary subTotal={subTotal} />
                 <CheckoutButton onClick={handle_checkout} loading={loading} />
-                {/* <button
-                  className="mb-3 flex w-full items-center justify-center gap-2 rounded-full bg-black py-4 text-lg font-medium text-white transition-transform hover:opacity-75 active:scale-95"
-                  onClick={handle_checkout}
-                >
-                  Checkout
-                  {loading && <img src="/spinner.svg" />}
-                </button> */}
               </div>
             </div>
           </>
@@ -110,8 +103,3 @@ const Cart = ({ categories }: Props) => {
 };
 
 export default Cart;
-
-export async function getStaticProps() {
-  const categories = await fetchAllCategories();
-  return { props: { categories } };
-}

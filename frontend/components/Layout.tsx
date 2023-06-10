@@ -1,3 +1,4 @@
+import { twMerge } from "tailwind-merge";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -6,7 +7,7 @@ import { MenuItemType } from "@/types";
 import { Footer, Wrapper, Navbar } from "@/components";
 
 import { Urbanist } from "next/font/google";
-const urbanist = Urbanist({ subsets: ["latin"] });
+const font = Urbanist({ subsets: ["latin"] });
 
 interface Props {
   navbarMenuItems: MenuItemType[];
@@ -15,7 +16,8 @@ interface Props {
 
 const Layout = ({ navbarMenuItems, children }: Props) => {
   return (
-    <main className={urbanist.className}>
+    <main className={twMerge("min-w-full", font.className)}>
+      <Navbar menuItems={navbarMenuItems} />
       <Wrapper>
         <ToastContainer
           position="bottom-right"
@@ -29,7 +31,6 @@ const Layout = ({ navbarMenuItems, children }: Props) => {
           pauseOnHover
           theme="dark"
         />
-        <Navbar menuItems={navbarMenuItems} />
         {children}
       </Wrapper>
       <Footer />

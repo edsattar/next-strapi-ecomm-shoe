@@ -50,7 +50,7 @@ const Footer = () => {
               <Link
                 key={item.id}
                 href={item.url || "#"}
-                className="cursor-pointer font-oswald text-sm font-medium uppercase"
+                className="font-oswald cursor-pointer text-sm font-medium uppercase"
               >
                 {item.name}
               </Link>

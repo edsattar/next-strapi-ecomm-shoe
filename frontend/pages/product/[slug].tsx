@@ -12,7 +12,6 @@ import {
   fetchAllCategories,
   fetchAllProductSlugs,
   fetchProductBySlug,
-  fetch_from_strapi,
   fetch_related_products,
 } from "@/utils/strapi";
 
@@ -33,6 +32,31 @@ interface Props {
   relatedProducts: ProductsType;
 }
 
+export async function getStaticPaths() {
+  const { data } = await fetchAllProductSlugs();
+  const paths = data?.map((item) => ({
+    params: { slug: item.attributes.slug },
+  }));
+  return { paths, fallback: false };
+}
+
+interface Params {
+  params: { slug: string };
+}
+
+export async function getStaticProps({ params: { slug } }: Params) {
+  const products = await fetchProductBySlug(slug);
+  const relatedProducts = await fetch_related_products(products);
+  const categories = await fetchAllCategories();
+  const navbarMenuItems = [
+    { id: 1, name: "Home", url: "/" },
+    { id: 2, name: "About", url: "/about" },
+    { id: 3, name: "Categories", subMenu: categories.data },
+    { id: 4, name: "Contact", url: "/contact" },
+    { id: 5, name: "Blog", url: "/blog" },
+  ];
+  return { props: { navbarMenuItems, products, relatedProducts } };
+}
 const ProductDetails = ({
   navbarMenuItems,
   products,
@@ -192,35 +216,3 @@ const ProductDetails = ({
 };
 
 export default ProductDetails;
-
-export async function getStaticPaths() {
-  // fetch products keeping only the slug
-  const { data } = await fetchAllProductSlugs();
-
-  // get paths from categories slug
-  const paths = data?.map((item) => ({
-    params: { slug: item.attributes.slug },
-  }));
-
-  return { paths, fallback: false };
-}
-
-export async function getStaticProps({
-  params: { slug },
-}: {
-  params: { slug: string };
-}) {
-  // fetch categories keeping only the title and slug for navbar
-  const categories = await fetchAllCategories();
-  const navbarMenuItems = [
-    { id: 1, name: "Home", url: "/" },
-    { id: 2, name: "About", url: "/about" },
-    { id: 3, name: "Categories", subMenu: categories.data },
-    { id: 4, name: "Contact", url: "/contact" },
-    { id: 5, name: "Blog", url: "/blog" },
-  ];
-
-  const products = await fetchProductBySlug(slug);
-  const relatedProducts = await fetch_related_products(products);
-  return { props: { navbarMenuItems, products, relatedProducts } };
-}

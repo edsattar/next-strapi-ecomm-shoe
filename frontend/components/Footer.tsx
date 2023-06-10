@@ -43,7 +43,7 @@ const Footer = () => {
     <footer className="bg-black pb-3 pt-14 text-white">
       <Wrapper className="flex flex-col justify-between gap-[50px] md:flex-row md:gap-0">
         {/* LEFT START */}
-        <div className="flex flex-col gap-[50px] md:flex-row md:gap-[75px] lg:gap-[100px]">
+        <div className="flex flex-col gap-[50px] m-auto sm:flex-row md:flex-row md:gap-[75px] lg:gap-[100px]">
           {/* MENU START */}
           <div className="flex shrink-0 flex-col gap-3">
             {menuLeft.map((item) => (

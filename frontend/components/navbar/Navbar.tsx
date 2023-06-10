@@ -50,7 +50,7 @@ const Navbar = ({ menuItems }: Props) => {
         {/*----- Icon Area -----*/}
         <div className="flex items-center gap-2 text-black">
           {/*----- Favorite Icon -----*/}
-          <BadgedIcon icon={IoMdHeartEmpty} count={51} />
+          <BadgedIcon icon={IoMdHeartEmpty} count={0} />
 
           {/*----- Cart Icon -----*/}
           <Link href="/cart">
